@@ -8,9 +8,9 @@ import { IThemeManager } from '@jupyterlab/apputils';
 /**
  * Initialization data for the jh-vantage-theme extension.
  */
-const extension: JupyterFrontEndPlugin<void> = {
+const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jh-vantage-theme:plugin',
-  description: 'A JupyterLab extension.',
+  description: 'Vantage Compute theme for JupyterLab',
   autoStart: true,
   requires: [IThemeManager],
   activate: (app: JupyterFrontEnd, manager: IThemeManager) => {
@@ -26,4 +26,4 @@ const extension: JupyterFrontEndPlugin<void> = {
   }
 };
 
-export default extension;
+export default plugin;

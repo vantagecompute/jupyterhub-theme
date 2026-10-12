@@ -7,13 +7,17 @@ node_modules/
 *.egg-info/
 .ipynb_checkpoints
 *.tsbuildinfo
+jh_vantage_theme/labextension
 # Version file is handled by hatchling
-jh-vantage-theme/_version.py
+jh_vantage_theme/_version.py
 
 # Created by https://www.gitignore.io/api/python
 # Edit at https://www.gitignore.io/?templates=python
 
 ### Python ###
+# Virtual environments
+.venv
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

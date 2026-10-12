@@ -1,75 +1,68 @@
 # jh-vantage-theme
 
-A JupyterLab extension.
+The Vantage Compute theme for JupyterLab 4. It is a prebuilt extension: install the Python
+package and JupyterLab picks it up, with no Node.js and no `jupyter lab build`.
+
+The Vantage notebook images built by
+[vdeployer](https://github.com/vantagecompute/vdeployer) install it and make it the
+default theme.
+
+Full documentation: <https://docs.vantagecompute.ai/developer/jupyterhub-theme/>
+(source in [`docusaurus/`](docusaurus/)).
 
 ## Requirements
 
-- JupyterLab >= 4.0.0
+- JupyterLab 4.x
+- Python 3.10 or newer
 
 ## Install
-
-To install the extension, execute:
 
 ```bash
 pip install jh-vantage-theme
 ```
 
+To make it the default theme, add this to
+`<sys.prefix>/share/jupyter/lab/settings/overrides.json`:
+
+```json
+{
+  "@jupyterlab/apputils-extension:themes": {
+    "theme": "jh-vantage-theme"
+  }
+}
+```
+
 ## Uninstall
 
-To remove the extension, execute:
-
 ```bash
 pip uninstall jh-vantage-theme
 ```
 
-## Contributing
+## Develop
 
-### Development install
-
-Note: You will need NodeJS to build the extension package.
-
-The `jlpm` command is JupyterLab's pinned version of
-[yarn](https://yarnpkg.com/) that is installed with JupyterLab. You may use
-`yarn` or `npm` in lieu of `jlpm` below.
+You need Node.js 20 or newer.
 
 ```bash
-# Clone the repo to your local environment
-# Change directory to the jh-vantage-theme directory
-# Install package in development mode
-pip install -e "."
-# Link your development version of the extension with JupyterLab
+python -m venv .venv && . .venv/bin/activate
+pip install "jupyterlab>=4.6,<5" "jupyter-builder>=1.2.3,<2" build
+jlpm install
+jlpm lint:check     # stylelint, prettier, eslint
+jlpm build:prod     # build the extension into jh_vantage_theme/labextension
+python -m build     # wheel and sdist into dist/
+```
+
+To work on the theme in a running JupyterLab:
+
+```bash
+pip install -e .
 jupyter labextension develop . --overwrite
-# Rebuild extension Typescript source after making changes
-jlpm build
+jlpm watch          # in one terminal
+jupyter lab         # in another; refresh the browser after a change
 ```
 
-You can watch the source directory and run JupyterLab at the same time in different terminals to watch for changes in the extension's source and automatically rebuild the extension.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more.
 
-```bash
-# Watch the source directory in one terminal, automatically rebuilding when needed
-jlpm watch
-# Run JupyterLab in another terminal
-jupyter lab
-```
+## Release
 
-With the watch command running, every saved change will immediately be built locally and available in your running JupyterLab. Refresh JupyterLab to load the change in your browser (you may need to wait several seconds for the extension to be rebuilt).
-
-By default, the `jlpm build` command generates the source maps for this extension to make it easier to debug using the browser dev tools. To also generate source maps for the JupyterLab core extensions, you can run the following command:
-
-```bash
-jupyter lab build --minimize=False
-```
-
-### Development uninstall
-
-```bash
-pip uninstall jh-vantage-theme
-```
-
-In development mode, you will also need to remove the symlink created by `jupyter labextension develop`
-command. To find its location, you can run `jupyter labextension list` to figure out where the `labextensions`
-folder is located. Then you can remove the symlink named `jh-vantage-theme` within that folder.
-
-### Packaging the extension
-
-See [RELEASE](RELEASE.md)
+See [RELEASE.md](RELEASE.md). Releases publish to PyPI and GitHub from `v*` tags only,
+through OIDC trusted publishing, with no stored token.

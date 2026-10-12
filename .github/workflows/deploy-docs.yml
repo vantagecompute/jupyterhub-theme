@@ -1,0 +1,83 @@
+# Deploy the jupyterhub-theme docs as a spoke site under
+# /developer/jupyterhub-theme/ on docs.vantagecompute.ai (S3 + CloudFront).
+#
+# Auth is handled at the edge by the Lambda@Edge Keycloak gateway on
+# all of /developer/*; no per-spoke auth config is needed.
+#
+# Runs only for v* tags of this repository (also when dispatched by hand, which
+# must name a tag). AWS access is through GitHub OIDC: the spoke role trusts
+# only this repository's immutable subject and writes only its own prefix.
+#
+# Required repo variables:
+#   DOCS_BUCKET               S3 bucket name (shared with vantage-docs)
+#   DOCS_CF_DISTRIBUTION_ID   CloudFront distribution ID
+#   DOCS_SPOKE_ROLE_ARN       IAM role scoped to developer/jupyterhub-theme/*
+
+name: Deploy docs (spoke)
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: docs-spoke
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    if: github.repository_id == 964113457 && startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-26.04
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0          # getProjectVersion() needs tag history
+          persist-credentials: false
+
+      # No dependency cache: a release deploy installs from the lockfile alone.
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+          package-manager-cache: false
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      # Lockfile-exact, and no package install scripts run.
+      - name: Install docs dependencies
+        working-directory: docusaurus
+        run: yarn install --frozen-lockfile --ignore-scripts
+
+      - name: Build docs
+        working-directory: docusaurus
+        run: yarn build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@e1253824e5c10ff9df46874f81ed3ec929e19cfd # v6.3.0
+        with:
+          role-to-assume: ${{ vars.DOCS_SPOKE_ROLE_ARN }}
+          aws-region: us-east-1
+
+      - name: Sync to S3
+        env:
+          DOCS_BUCKET: ${{ vars.DOCS_BUCKET }}
+        run: |
+          aws s3 sync docusaurus/build/ "s3://${DOCS_BUCKET}/developer/jupyterhub-theme/" --delete
+
+      - name: Invalidate CloudFront
+        env:
+          DOCS_CF_DISTRIBUTION_ID: ${{ vars.DOCS_CF_DISTRIBUTION_ID }}
+        run: |
+          if [ -z "${DOCS_CF_DISTRIBUTION_ID}" ]; then
+            echo "DOCS_CF_DISTRIBUTION_ID is not set; skipping CloudFront invalidation."
+            exit 0
+          fi
+          aws cloudfront create-invalidation \
+            --distribution-id "${DOCS_CF_DISTRIBUTION_ID}" \
+            --paths "/developer/jupyterhub-theme/*"
