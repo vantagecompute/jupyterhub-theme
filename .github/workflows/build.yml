@@ -1,0 +1,91 @@
+name: Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.14'
+
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 24
+
+      - name: Install the build tools
+        run: python -m pip install "jupyterlab>=4.6,<5" "jupyter-builder>=1.2.3,<2" build
+
+      - name: Lint
+        run: |
+          set -eux
+          jlpm install --immutable
+          jlpm lint:check
+
+      - name: Build the extension
+        run: jlpm build:prod
+
+      # vdeployer's notebook image builds this package from source as an
+      # unprivileged user whose ~/.cache is owned by root. The build must not
+      # need to write there (it did before @jupyter/builder, and that broke the
+      # image). Build the wheel the way pip does in the image, with an
+      # unwritable cache, to keep that regression out.
+      - name: Package with an unwritable home cache
+        run: |
+          set -eux
+          jlpm clean:all
+          home="$(mktemp -d)"
+          mkdir -p "$home/.cache"
+          chmod 555 "$home/.cache"
+          HOME="$home" XDG_CACHE_HOME="$home/.cache" python -m build
+          test -z "$(ls -A "$home/.cache")"
+
+      - name: Check the wheel
+        run: |
+          set -eux
+          python -m pip install dist/jh_vantage_theme-*.whl
+          jupyter labextension list 2>&1 | grep -ie "jh-vantage-theme.*OK"
+
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: dist
+          path: dist/
+          if-no-files-found: error
+
+  # Install the wheel where there is no Node.js, as the notebook images do once
+  # they install a released wheel instead of building from source.
+  test-isolated:
+    needs: build
+    runs-on: ubuntu-26.04
+    steps:
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: '3.10'
+
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: dist
+
+      - name: Install and check
+        run: |
+          set -eux
+          sudo rm -rf "$(command -v node)"
+          sudo rm -rf "$(command -v node)" || true
+          python -m pip install "jupyterlab>=4,<5" jh_vantage_theme-*.whl
+          jupyter labextension list 2>&1 | grep -ie "jh-vantage-theme.*OK"
+          python -m jupyterlab.browser_check --no-browser-test
