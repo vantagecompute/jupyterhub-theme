@@ -32,7 +32,6 @@ share/jupyter/labextensions/jh-vantage-theme/
   static/                 the federated module (remoteEntry, chunks, style.js)
   themes/jh-vantage-theme/
     index.css             the theme stylesheet (style/index.css + style/variables.css)
-    *.woff2 / *.woff / *.ttf
 ```
 
 The source is small:
