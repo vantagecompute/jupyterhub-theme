@@ -1070,16 +1070,6 @@ code {
   font-family: var(--jp-code-font-family) !important;
 }
 
-@font-face {
-  font-family: 'Proxima Nova';
-  src:
-    local('Proxima Nova Regular'),
-    local('Proxima-Nova-Regular'),
-    url('./assets/fonts/ProximaNova-Regular.woff2') format('woff2'),
-    url('./assets/fonts/ProximaNova-Regular.woff') format('woff'),
-    url('./assets/fonts/ProximaNova-Regular.ttf') format('truetype');
-}
-
 .jp-RunningSessions-itemShutdown > .jp-ToolbarButtonComponent {
   border: none !important;
 }
