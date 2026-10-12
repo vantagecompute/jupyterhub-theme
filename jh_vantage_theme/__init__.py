@@ -5,7 +5,7 @@ except ImportError:
     # in editable mode with pip. It is highly recommended to install
     # the package from a stable release or in editable mode: https://pip.pypa.io/en/stable/topics/local-project-installs/#editable-installs
     import warnings
-    warnings.warn("Importing 'jh-vantage-theme' outside a proper installation.")
+    warnings.warn("Importing 'jh_vantage_theme' outside a proper installation.")
     __version__ = "dev"
 
 

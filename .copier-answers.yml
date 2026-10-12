@@ -1,13 +1,16 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v4.3.8
-_src_path: https://github.com/jupyterlab/extension-template
-author_email: bruno@vantagecompute.ai
-author_name: omnivector
+_commit: v4.6.5
+_src_path: gh:jupyterlab/extension-template
+advanced: false
+author_email: info@vantagecompute.ai
+author_name: Vantage Compute
+has_ai_rules: false
 has_binder: false
 has_settings: false
 kind: theme
 labextension_name: jh-vantage-theme
-project_short_description: A JupyterLab extension.
-python_name: jh-vantage-theme
-repository: https://github.com/omnivector-solutions/jupyterhub-theme
+project_short_description: Vantage Compute theme for JupyterLab
+python_name: jh_vantage_theme
+repository: https://github.com/vantagecompute/jupyterhub-theme
 test: false
+

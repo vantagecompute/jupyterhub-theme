@@ -3,4 +3,7 @@ node_modules
 **/lib
 **/package.json
 !/package.json
-jh-vantage-theme
+jh_vantage_theme
+eslint.config.mjs
+.venv
+docusaurus

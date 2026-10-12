@@ -1,12 +1,13 @@
 [build-system]
-requires = ["hatchling>=1.5.0", "jupyterlab>=4.0.0,<5", "hatch-nodejs-version>=0.3.2"]
+requires = ["hatchling>=1.27.0", "hatch-nodejs-version>=0.4.0", "jupyter-builder>=1.2.3,<2"]
 build-backend = "hatchling.build"
 
 [project]
 name = "jh-vantage-theme"
 readme = "README.md"
-license = { file = "LICENSE" }
-requires-python = ">=3.9"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+requires-python = ">=3.10"
 classifiers = [
     "Framework :: Jupyter",
     "Framework :: Jupyter :: JupyterLab",
@@ -14,18 +15,23 @@ classifiers = [
     "Framework :: Jupyter :: JupyterLab :: Extensions",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Prebuilt",
     "Framework :: Jupyter :: JupyterLab :: Extensions :: Themes",
-    "License :: OSI Approved :: BSD License",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
 ]
 dynamic = ["version", "description", "authors", "urls", "keywords"]
+
+[project.optional-dependencies]
+dev = [
+    "jupyterlab>=4.6,<5",
+    "jupyter-builder>=1.2.3,<2",
+]
 
 [tool.hatch.version]
 source = "nodejs"
@@ -34,25 +40,23 @@ source = "nodejs"
 fields = ["description", "authors", "urls", "keywords"]
 
 [tool.hatch.build.targets.sdist]
-exclude = [".github", "binder"]
+artifacts = ["jh_vantage_theme/labextension"]
+exclude = [".github", "binder", "docusaurus"]
 
 [tool.hatch.build.targets.wheel.shared-data]
-"jh-vantage-theme/labextension" = "share/jupyter/labextensions/jh-vantage-theme"
+"jh_vantage_theme/labextension" = "share/jupyter/labextensions/jh-vantage-theme"
 "install.json" = "share/jupyter/labextensions/jh-vantage-theme/install.json"
 
-[tool.hatch.build.targets.wheel]
-packages = ["jh-vantage-theme"]
-
 [tool.hatch.build.hooks.version]
-path = "jh-vantage-theme/_version.py"
+path = "jh_vantage_theme/_version.py"
 
 [tool.hatch.build.hooks.jupyter-builder]
-dependencies = ["hatch-jupyter-builder>=0.5"]
+dependencies = ["hatch-jupyter-builder>=0.10.0"]
 build-function = "hatch_jupyter_builder.npm_builder"
 ensured-targets = [
-    "jh-vantage-theme/labextension/package.json",
+    "jh_vantage_theme/labextension/package.json",
 ]
-skip-if-exists = ["jh-vantage-theme/labextension/static/style.js"]
+skip-if-exists = ["jh_vantage_theme/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:prod"
@@ -62,18 +66,7 @@ npm = ["jlpm"]
 build_cmd = "install:extension"
 npm = ["jlpm"]
 source_dir = "src"
-build_dir = "jh-vantage-theme/labextension"
-
-[tool.jupyter-releaser.options]
-version_cmd = "hatch version"
-
-[tool.jupyter-releaser.hooks]
-before-build-npm = [
-    "python -m pip install 'jupyterlab>=4.0.0,<5'",
-    "jlpm",
-    "jlpm build:prod"
-]
-before-build-python = ["jlpm clean:all"]
+build_dir = "jh_vantage_theme/labextension"
 
 [tool.check-wheel-contents]
 ignore = ["W002"]
