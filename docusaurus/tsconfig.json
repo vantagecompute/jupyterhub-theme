@@ -1,0 +1,21 @@
+{
+  // This file is not used in compilation. It is here just for a nice editor experience.
+  // Inlined from @docusaurus/tsconfig (minus the deprecated `baseUrl`, removed in
+  // TS 7) so we can use the TS6-native `paths`-only module resolution format.
+  // Re-extend @docusaurus/tsconfig once it ships a TS6+-compatible base.
+  "compilerOptions": {
+    "allowJs": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "moduleResolution": "bundler",
+    "module": "esnext",
+    "noEmit": true,
+    "paths": {
+      "@site/*": ["./*"]
+    },
+    "skipLibCheck": true
+  },
+  "exclude": [".docusaurus", "build"]
+}
