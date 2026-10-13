@@ -27,10 +27,13 @@ concurrency:
   group: docs-spoke
   cancel-in-progress: false
 
+# Set the repository variable USE_SELF_HOSTED_RUNNERS to "true" to run every
+# job below on the vantage-eng self-hosted runner group (X64). To widen or
+# narrow that, set SELF_HOSTED_RUNS_ON to a runs-on value in JSON.
 jobs:
   deploy:
     if: github.repository_id == 964113457 && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     permissions:
       id-token: write
       contents: read

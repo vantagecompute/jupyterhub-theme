@@ -25,10 +25,13 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# Set the repository variable USE_SELF_HOSTED_RUNNERS to "true" to run every
+# job below on the vantage-eng self-hosted runner group (X64). To widen or
+# narrow that, set SELF_HOSTED_RUNS_ON to a runs-on value in JSON.
 jobs:
   build:
     if: github.repository_id == 964113457 && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     permissions:
       contents: read
     steps:
@@ -43,6 +46,16 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+          package-manager-cache: ${{ runner.environment == 'github-hosted' }}
+
+      # A self-hosted runner keeps the tool cache's Python between jobs, so
+      # install into a job-local virtualenv: packages and the built wheel from
+      # an earlier run must not satisfy this run's installs.
+      - name: Use a job-local virtualenv
+        if: runner.environment != 'github-hosted'
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
 
       - name: Check the tag matches the package version
         env:
@@ -72,7 +85,7 @@ jobs:
   pypi:
     needs: build
     if: github.repository_id == 964113457 && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     environment:
       name: pypi
       url: https://pypi.org/project/jh-vantage-theme/
@@ -97,7 +110,7 @@ jobs:
   github-release:
     needs: [build, pypi]
     if: github.repository_id == 964113457 && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     permissions:
       contents: write
     steps:
