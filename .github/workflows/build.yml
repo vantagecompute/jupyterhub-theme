@@ -11,9 +11,12 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
   cancel-in-progress: true
 
+# Set the repository variable USE_SELF_HOSTED_RUNNERS to "true" to run every
+# job below on the vantage-eng self-hosted runner group (X64). To widen or
+# narrow that, set SELF_HOSTED_RUNS_ON to a runs-on value in JSON.
 jobs:
   build:
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     permissions:
       contents: read
     steps:
@@ -28,6 +31,16 @@ jobs:
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
           node-version: 24
+          package-manager-cache: ${{ runner.environment == 'github-hosted' }}
+
+      # A self-hosted runner keeps the tool cache's Python between jobs, so
+      # install into a job-local virtualenv: packages and the built wheel from
+      # an earlier run must not satisfy this run's installs.
+      - name: Use a job-local virtualenv
+        if: runner.environment != 'github-hosted'
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
 
       - name: Install the build tools
         run: python -m pip install "jupyterlab>=4.6,<5" "jupyter-builder>=1.2.3,<2" build
@@ -72,13 +85,22 @@ jobs:
   # they install a released wheel instead of building from source.
   test-isolated:
     needs: build
-    runs-on: ubuntu-26.04
+    runs-on: ${{ vars.USE_SELF_HOSTED_RUNNERS == 'true' && fromJSON(vars.SELF_HOSTED_RUNS_ON || '{"group":"vantage-eng","labels":["X64"]}') || 'ubuntu-26.04' }}
     permissions:
       actions: read
     steps:
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: '3.10'
+
+      # A self-hosted runner keeps the tool cache's Python between jobs, so
+      # install into a job-local virtualenv: packages and the built wheel from
+      # an earlier run must not satisfy this run's installs.
+      - name: Use a job-local virtualenv
+        if: runner.environment != 'github-hosted'
+        run: |
+          python -m venv "$RUNNER_TEMP/venv"
+          echo "$RUNNER_TEMP/venv/bin" >> "$GITHUB_PATH"
 
       - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
@@ -87,8 +109,16 @@ jobs:
       - name: Install and check
         run: |
           set -eux
-          sudo rm -rf "$(command -v node)"
-          sudo rm -rf "$(command -v node)" || true
+          if [ "$RUNNER_ENVIRONMENT" = github-hosted ]; then
+            sudo rm -rf "$(command -v node)"
+            sudo rm -rf "$(command -v node)" || true
+          else
+            # Never delete a persistent runner's Node.js: drop every PATH
+            # entry that holds a node binary instead.
+            PATH="$(printf '%s' "$PATH" | tr ':' '\n' | while read -r d; do [ -x "$d/node" ] || printf '%s:' "$d"; done)"
+            PATH="${PATH%:}"
+            if command -v node; then echo 'node is still on PATH' >&2; exit 1; fi
+          fi
           python -m pip install "jupyterlab>=4,<5" jh_vantage_theme-*.whl
           jupyter labextension list 2>&1 | grep -ie "jh-vantage-theme.*OK"
           python -m jupyterlab.browser_check --no-browser-test
