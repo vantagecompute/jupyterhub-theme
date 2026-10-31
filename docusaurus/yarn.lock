@@ -4566,9 +4566,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vantagecompute/docusaurus-theme@npm:^0.5.0":
-  version: 0.5.6
-  resolution: "@vantagecompute/docusaurus-theme@npm:0.5.6"
+"@vantagecompute/docusaurus-theme@npm:^0.5.7":
+  version: 0.5.7
+  resolution: "@vantagecompute/docusaurus-theme@npm:0.5.7"
   dependencies:
     clsx: "npm:^2.1.1"
     unist-util-visit: "npm:^5.1.0"
@@ -4579,10 +4579,7 @@ __metadata:
     "@docusaurus/theme-mermaid": ^3.0.0
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@docusaurus/theme-mermaid":
-      optional: true
-  checksum: 10c0/bbc1acf0aeee1263242c44b435bbd9e7bec3c94d10a036f688fcdf1e84a9a75cdae2f8065087f8c5e034dea65fc3e885e922762b0a2a2bce340afca8e5c13c0d
+  checksum: 10c0/43764aa70cd2a5f339f890ccaf3ecdc90c0339c3fce0eec4e2f7a4f0d1f8b45e20a4e9954dd694dd4cd7cb4af7efce518d7a77b4512bea182a431d1e8d0efe3b
   languageName: node
   linkType: hard
 
@@ -6792,7 +6789,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-plugin-llms@npm:^0.6.0":
+"docusaurus-plugin-llms@npm:^0.6.1":
   version: 0.6.1
   resolution: "docusaurus-plugin-llms@npm:0.6.1"
   dependencies:
@@ -8803,12 +8800,12 @@ __metadata:
     "@docusaurus/tsconfig": "npm:^3.10.2"
     "@docusaurus/types": "npm:^3.10.2"
     "@mdx-js/react": "npm:^3.1.1"
-    "@vantagecompute/docusaurus-theme": "npm:^0.5.0"
+    "@vantagecompute/docusaurus-theme": "npm:^0.5.7"
     clsx: "npm:^2.1.1"
-    docusaurus-plugin-llms: "npm:^0.6.0"
+    docusaurus-plugin-llms: "npm:^0.6.1"
     prism-react-renderer: "npm:^2.4.1"
-    react: "npm:^19.2.8"
-    react-dom: "npm:^19.2.8"
+    react: "npm:^19.3.1"
+    react-dom: "npm:^19.3.1"
     typescript: "npm:^7.0.2"
   languageName: unknown
   linkType: soft
@@ -11702,7 +11699,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-dom@npm:^19.2.8":
+"react-dom@npm:^19.3.1":
   version: 19.3.1
   resolution: "react-dom@npm:19.3.1"
   dependencies:
@@ -11823,7 +11820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react@npm:^19.2.8":
+"react@npm:^19.3.1":
   version: 19.3.1
   resolution: "react@npm:19.3.1"
   checksum: 10c0/f0ed036d1223562c09c8347858ca712733ea6e27a30db709ee9c3f3f176d3e9e767afce735d59956addf3d030102e256bba82dea635fc1bdb0e01107e98fef10
