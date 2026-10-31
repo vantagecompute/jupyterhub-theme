@@ -5,7 +5,7 @@ Docusaurus site for `jh-vantage-theme`, published as a spoke of the Vantage docs
 
 ```bash
 cd docusaurus
-yarn install --frozen-lockfile
+yarn install --immutable
 yarn start        # dev server
 yarn build        # production build into docusaurus/build
 ```

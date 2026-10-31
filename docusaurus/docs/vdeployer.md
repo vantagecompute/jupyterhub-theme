@@ -40,8 +40,8 @@ A git URL is a source install, so the image build compiles the extension:
 
 1. pip creates an isolated build environment with the build requirements from
    `pyproject.toml` (`hatchling`, `hatch-nodejs-version`, `jupyter-builder`).
-2. The `hatch-jupyter-builder` hook runs `jlpm install` and `jlpm build:prod`, using the
-   Node.js the image installs from apt.
+2. The `hatch-jupyter-builder` hook runs `yarn install` and `yarn build:prod`, so the
+   image needs Node.js 26 and the pinned Yarn 4.18.1 on `PATH`.
 3. hatchling packages `jh_vantage_theme/labextension` into the wheel, which pip installs
    into `/opt/conda`.
 

@@ -45,8 +45,11 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
-          package-manager-cache: ${{ runner.environment == 'github-hosted' }}
+          node-version: 26
+          package-manager-cache: false
+
+      - name: Set up Yarn (pinned by packageManager, checksum-verified)
+        uses: ./.github/actions/setup-yarn
 
       # A self-hosted runner keeps the tool cache's Python between jobs, so
       # install into a job-local virtualenv: packages and the built wheel from
@@ -71,8 +74,8 @@ jobs:
         run: |
           set -eux
           python -m pip install "jupyterlab>=4.6,<5" "jupyter-builder>=1.2.3,<2" build
-          jlpm install --immutable
-          jlpm lint:check
+          yarn install --immutable
+          yarn lint:check
           python -m build
           (cd dist && sha256sum -- * > SHA256SUMS)
 

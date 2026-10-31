@@ -60,11 +60,11 @@ skip-if-exists = ["jh_vantage_theme/labextension/static/style.js"]
 
 [tool.hatch.build.hooks.jupyter-builder.build-kwargs]
 build_cmd = "build:prod"
-npm = ["jlpm"]
+npm = ["yarn"]
 
 [tool.hatch.build.hooks.jupyter-builder.editable-build-kwargs]
 build_cmd = "install:extension"
-npm = ["jlpm"]
+npm = ["yarn"]
 source_dir = "src"
 build_dir = "jh_vantage_theme/labextension"
 

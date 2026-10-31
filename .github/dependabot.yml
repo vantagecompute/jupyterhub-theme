@@ -1,0 +1,25 @@
+# Dependency bumps arrive as reviewed pull requests. CI and the docs deploy
+# install from the committed lockfiles only.
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    commit-message:
+      prefix: chore
+      include: scope
+    schedule:
+      interval: weekly
+    groups:
+      extension-deps:
+        patterns: ["*"]
+
+  - package-ecosystem: npm
+    directory: /docusaurus
+    commit-message:
+      prefix: chore
+      include: scope
+    schedule:
+      interval: weekly
+    groups:
+      docs-deps:
+        patterns: ["*"]

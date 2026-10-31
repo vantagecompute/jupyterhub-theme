@@ -1,0 +1,38 @@
+# Puts on PATH the Yarn release that a package.json pins in `packageManager`,
+# after checking it against the sha512 in that same pin.
+#
+# This stands in for `corepack enable`: Node 25 and later no longer ship
+# corepack, and installing it would take npm. The pin
+# ("yarn@<version>+sha512.<hex>") is the one corepack itself would honour, so
+# local corepack users and CI run the identical Yarn, and a Yarn upgrade is
+# still one `packageManager` edit.
+name: Set up Yarn
+description: Install the packageManager-pinned Yarn release, checksum-verified, onto PATH.
+inputs:
+  package-json:
+    description: Path, from the repository root, of the package.json whose packageManager names the Yarn release.
+    default: package.json
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      env:
+        PACKAGE_JSON: ${{ inputs.package-json }}
+      run: |
+        set -euo pipefail
+        pin=$(node -p 'require(process.argv[1]).packageManager || ""' "$GITHUB_WORKSPACE/$PACKAGE_JSON")
+        if [[ ! "$pin" =~ ^yarn@([0-9]+\.[0-9]+\.[0-9]+)\+sha512\.([0-9a-f]{128})$ ]]; then
+          echo "::error file=$PACKAGE_JSON::packageManager must be yarn@<x.y.z>+sha512.<hex>, got '$pin'"
+          exit 1
+        fi
+        version=${BASH_REMATCH[1]}
+        sha512=${BASH_REMATCH[2]}
+        dir="$RUNNER_TEMP/yarn-$version"
+        mkdir -p "$dir"
+        curl -fsSL --retry 3 -o "$dir/yarn.js" \
+          "https://repo.yarnpkg.com/$version/packages/yarnpkg-cli/bin/yarn.js"
+        echo "$sha512  $dir/yarn.js" | sha512sum -c --quiet -
+        printf '#!/bin/sh\nexec node "%s" "$@"\n' "$dir/yarn.js" > "$dir/yarn"
+        chmod +x "$dir/yarn"
+        echo "$dir" >> "$GITHUB_PATH"
+        echo "Yarn $version from $PACKAGE_JSON"

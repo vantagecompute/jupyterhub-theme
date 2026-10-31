@@ -40,14 +40,15 @@ pip uninstall jh-vantage-theme
 
 ## Develop
 
-You need Node.js 20 or newer.
+You need Node.js 26 or newer and Yarn 4.18.1, the release `packageManager` in
+`package.json` pins.
 
 ```bash
 python -m venv .venv && . .venv/bin/activate
 pip install "jupyterlab>=4.6,<5" "jupyter-builder>=1.2.3,<2" build
-jlpm install
-jlpm lint:check     # stylelint, prettier, eslint
-jlpm build:prod     # build the extension into jh_vantage_theme/labextension
+yarn install
+yarn lint:check     # stylelint, prettier, eslint
+yarn build:prod     # build the extension into jh_vantage_theme/labextension
 python -m build     # wheel and sdist into dist/
 ```
 
@@ -56,7 +57,7 @@ To work on the theme in a running JupyterLab:
 ```bash
 pip install -e .
 jupyter labextension develop . --overwrite
-jlpm watch          # in one terminal
+yarn watch          # in one terminal
 jupyter lab         # in another; refresh the browser after a change
 ```
 

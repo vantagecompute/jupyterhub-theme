@@ -30,8 +30,11 @@ jobs:
 
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
-          package-manager-cache: ${{ runner.environment == 'github-hosted' }}
+          node-version: 26
+          package-manager-cache: false
+
+      - name: Set up Yarn (pinned by packageManager, checksum-verified)
+        uses: ./.github/actions/setup-yarn
 
       # A self-hosted runner keeps the tool cache's Python between jobs, so
       # install into a job-local virtualenv: packages and the built wheel from
@@ -48,11 +51,11 @@ jobs:
       - name: Lint
         run: |
           set -eux
-          jlpm install --immutable
-          jlpm lint:check
+          yarn install --immutable
+          yarn lint:check
 
       - name: Build the extension
-        run: jlpm build:prod
+        run: yarn build:prod
 
       # vdeployer's notebook image builds this package from source as an
       # unprivileged user whose ~/.cache is owned by root. The build must not
@@ -62,7 +65,7 @@ jobs:
       - name: Package with an unwritable home cache
         run: |
           set -eux
-          jlpm clean:all
+          yarn clean:all
           home="$(mktemp -d)"
           mkdir -p "$home/.cache"
           chmod 555 "$home/.cache"

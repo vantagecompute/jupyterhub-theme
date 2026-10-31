@@ -40,5 +40,5 @@ writable for the build (`XDG_CACHE_HOME=/tmp/cache pip install ...`).
 
 ## Lint fails on style/variables.css
 
-Run `jlpm stylelint` to fix formatting. Ordering rules are off on purpose; see
+Run `yarn stylelint` to fix formatting. Ordering rules are off on purpose; see
 [Development](./development#lint).
