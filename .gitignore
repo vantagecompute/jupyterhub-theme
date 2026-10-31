@@ -121,7 +121,7 @@ dmypy.json
 .DS_Store
 
 
-# Yarn 4 (the binary comes from corepack, so nothing under .yarn is committed)
+# Yarn 4 (the release comes from the packageManager pin, so nothing under .yarn is committed)
 .yarn/*
 !.yarn/patches
 .pnp.*
