@@ -51,16 +51,16 @@ This is what the Vantage notebook images do (see [vdeployer](./vdeployer)).
 
 ## Install from source
 
-Installing from a git checkout or a git URL builds the extension, so it needs Node.js 20
-or newer on the machine:
+Installing from a git checkout or a git URL builds the extension, so it needs Node.js 26
+or newer and Yarn 4.18.1 (the release `packageManager` in `package.json` pins) on `PATH`:
 
 ```bash
 pip install "jh-vantage-theme @ git+https://github.com/vantagecompute/jupyterhub-theme@<commit>"
 ```
 
 pip installs the build requirements (`hatchling`, `hatch-jupyter-builder`,
-`jupyter-builder`) in an isolated environment, runs `jlpm install` and
-`jlpm build:prod`, and packages the result. Prefer a released wheel: it is faster, needs
+`jupyter-builder`) in an isolated environment, runs `yarn install` and
+`yarn build:prod`, and packages the result. Prefer a released wheel: it is faster, needs
 no Node.js and does not depend on the newest build tooling on the day you build.
 
 ## Uninstall

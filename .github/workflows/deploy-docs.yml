@@ -46,16 +46,18 @@ jobs:
       # No dependency cache: a release deploy installs from the lockfile alone.
       - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
         with:
-          node-version: 24
+          node-version: 26
           package-manager-cache: false
 
-      - name: Enable Corepack
-        run: corepack enable
+      - name: Set up Yarn (pinned by packageManager, checksum-verified)
+        uses: ./.github/actions/setup-yarn
+        with:
+          package-json: docusaurus/package.json
 
       # Lockfile-exact, and no package install scripts run.
       - name: Install docs dependencies
         working-directory: docusaurus
-        run: yarn install --frozen-lockfile --ignore-scripts
+        run: yarn install --immutable --mode=skip-build
 
       - name: Build docs
         working-directory: docusaurus

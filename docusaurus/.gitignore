@@ -18,3 +18,9 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+
+# Yarn 4 (the binary comes from corepack, so nothing under .yarn is committed)
+.yarn/*
+!.yarn/patches
+.pnp.*
