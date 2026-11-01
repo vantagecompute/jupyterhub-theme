@@ -7,7 +7,7 @@ description: Build, lint and iterate on jh-vantage-theme locally
 
 | Tool | Version | Why |
 | --- | --- | --- |
-| Python | 3.10 or newer | packaging, and JupyterLab to try the theme |
+| Python | 3.14 or newer | packaging, and JupyterLab to try the theme |
 | Node.js | 26 or newer (CI uses 26) | TypeScript and the extension bundler |
 | Yarn | 4.18.1, pinned with its sha512 in `packageManager` | Installs and scripts; use it instead of `npm` or JupyterLab's `jlpm` (an older Yarn) |
 

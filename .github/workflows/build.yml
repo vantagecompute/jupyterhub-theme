@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
         with:
-          python-version: '3.10'
+          python-version: '3.14'
 
       # A self-hosted runner keeps the tool cache's Python between jobs, so
       # install into a job-local virtualenv: packages and the built wheel from
