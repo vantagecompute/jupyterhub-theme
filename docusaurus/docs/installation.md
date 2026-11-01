@@ -6,7 +6,7 @@ description: Install jh-vantage-theme into a JupyterLab 4 server and make it the
 ## Requirements
 
 - JupyterLab 4.x
-- Python 3.10 or newer
+- Python 3.14 or newer
 
 Node.js is not needed to install a released wheel.
 

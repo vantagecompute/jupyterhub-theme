@@ -21,7 +21,7 @@ and no `jupyter lab build` at install time.
 | Python import package | `jh_vantage_theme` |
 | Lab extension and theme name | `jh-vantage-theme` |
 | JupyterLab | 4.x |
-| Python | 3.10 or newer |
+| Python | 3.14 or newer |
 
 ## What it ships
 

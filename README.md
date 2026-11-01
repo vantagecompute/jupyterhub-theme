@@ -13,7 +13,7 @@ Full documentation: <https://docs.vantagecompute.ai/developer/jupyterhub-theme/>
 ## Requirements
 
 - JupyterLab 4.x
-- Python 3.10 or newer
+- Python 3.14 or newer
 
 ## Install
 
