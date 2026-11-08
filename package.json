@@ -54,20 +54,20 @@
         "watch:labextension": "jupyter-builder watch ."
     },
     "dependencies": {
-        "@jupyterlab/application": "^4.6.4",
-        "@jupyterlab/apputils": "^4.7.4"
+        "@jupyterlab/application": "^4.6.5",
+        "@jupyterlab/apputils": "^4.7.5"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
         "@jupyter/builder": "^1.2.4",
         "@jupyter/eslint-plugin": "^1.4.0",
         "@types/json-schema": "^7.0.15",
-        "@types/react": "^18.3.31",
+        "@types/react": "^19.3.0",
         "@typescript/native": "npm:typescript@^7.0.2",
-        "eslint": "^10.13.0",
+        "eslint": "^10.14.0",
         "eslint-config-prettier": "^10.1.8",
         "eslint-plugin-prettier": "^5.5.7",
-        "globals": "^17.13.0",
+        "globals": "^17.14.0",
         "npm-run-all2": "^9.0.4",
         "prettier": "^3.9.10",
         "rimraf": "^6.1.3",
