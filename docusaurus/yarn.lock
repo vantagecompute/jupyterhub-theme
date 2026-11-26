@@ -6789,16 +6789,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"docusaurus-plugin-llms@npm:^0.6.1":
-  version: 0.6.1
-  resolution: "docusaurus-plugin-llms@npm:0.6.1"
+"docusaurus-plugin-llms@npm:^0.6.2":
+  version: 0.6.2
+  resolution: "docusaurus-plugin-llms@npm:0.6.2"
   dependencies:
     gray-matter: "npm:4.0.3"
     minimatch: "npm:9.0.3"
     yaml: "npm:2.8.1"
   peerDependencies:
     "@docusaurus/core": ^3.0.0
-  checksum: 10c0/b3137141342b73ff3cf410ab22a86edbd3a959f1a2c1b20578ed552056306e50b0c659b7264b70541db8f7fab42c423caf47de0eb259a982ce41be5d0873daf5
+  checksum: 10c0/b402a56ce3b4f7ff8529d07113eae4c86f30a728da9bf72c58086ddb05adc3f2c0971174ac0a2caf765eab24e831df618663a103536455a4f5094614b99a78f5
   languageName: node
   linkType: hard
 
@@ -8802,7 +8802,7 @@ __metadata:
     "@mdx-js/react": "npm:^3.1.1"
     "@vantagecompute/docusaurus-theme": "npm:^0.5.7"
     clsx: "npm:^2.1.1"
-    docusaurus-plugin-llms: "npm:^0.6.1"
+    docusaurus-plugin-llms: "npm:^0.6.2"
     prism-react-renderer: "npm:^2.4.1"
     react: "npm:^19.3.1"
     react-dom: "npm:^19.3.1"
